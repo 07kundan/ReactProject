@@ -1,16 +1,41 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
 import ImageCollection from './components/ImageCollection';
 
 function App() {
 
-  const [Image, setImage] = useState(ImageCollection.LCity)
+  const [screenSize, setScreenSize] = useState(window.innerWidth)
+  const [image, setImage] = useState()
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    // const image=city;
+    if (screenSize >= 768) {
+      setImage(ImageCollection.LargeScreen.city);
+    } else {
+      setImage(ImageCollection.MobileScreen.city);
+    }
+  }, [screenSize]);
+
   return (
-      <div>
-        <Layout Image={Image}/>
-      </div>
-    )
+    <div>
+      <Layout
+        backgroundImage={image}
+      />
+    </div>
+  )
 }
 
 export default App
