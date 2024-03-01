@@ -33,6 +33,7 @@ function App() {
     <div>
       <Layout
         backgroundImage={image}
+        textColor='text-black'
       />
     </div>
   )
