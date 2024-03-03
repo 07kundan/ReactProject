@@ -8,7 +8,9 @@ function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth)
   const [image, setImage] = useState()
 
+  // It'll return the screenSize
   useEffect(() => {
+
     const handleResize = () => {
       setScreenSize(window.innerWidth);
     };
@@ -18,7 +20,14 @@ function App() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+
   }, []);
+
+  // function for dynamic change background 
+
+  const ChangeBG = () => {
+
+  }
 
   useEffect(() => {
     // const image=city;
@@ -29,11 +38,14 @@ function App() {
     }
   }, [screenSize]);
 
+
   return (
     <div>
       <Layout
-        backgroundImage={image}
-        textColor='text-black'
+
+      backgroundImage={image}
+      textColor='text-black'
+
       />
     </div>
   )
