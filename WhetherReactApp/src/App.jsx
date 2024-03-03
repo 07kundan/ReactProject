@@ -7,6 +7,10 @@ function App() {
 
   const [screenSize, setScreenSize] = useState(window.innerWidth)
   const [image, setImage] = useState()
+  const [location, setLocation] = useState("");
+  const [data, setdata] = useState({});
+
+
 
   // It'll return the screenSize
   useEffect(() => {
@@ -30,21 +34,33 @@ function App() {
   }
 
   useEffect(() => {
-    // const image=city;
     if (screenSize >= 768) {
-      setImage(ImageCollection.LargeScreen.city);
+      if (data?.main?.temp < 20) {
+        setImage(ImageCollection.LargeScreen.rain)
+      }
+      else {
+        setImage(ImageCollection.LargeScreen.city);
+      }
     } else {
-      setImage(ImageCollection.MobileScreen.city);
+      if (data?.main?.temp < 20) {
+        setImage(ImageCollection.MobileScreen.rain)
+      }
+      else {
+        setImage(ImageCollection.MobileScreen.city);
+      }
     }
-  }, [screenSize]);
+  }, [screenSize, data]);
 
 
   return (
     <div>
       <Layout
-
-      backgroundImage={image}
-      textColor='text-black'
+        location={location}
+        setLocation={setLocation}
+        data={data}
+        setdata={setdata}
+        backgroundImage={image}
+        textColor='text-black'
 
       />
     </div>

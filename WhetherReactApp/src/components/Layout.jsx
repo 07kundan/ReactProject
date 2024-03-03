@@ -1,45 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTemperatureHalf, faDroplet, faWind, faCloud, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { fetchWeatherData } from './fetchApi';
 
 function Layout(props) {
 
-  const apiKey = 'b2c9980e25e35208ef72b2ee5b337154'
+  const data=props.data;
+  const [date, setdate] = useState(new Date())
 
-  const [location, setLocation] = useState("");
-  const [data, setdata] = useState({});
-  const [date,setdate] = useState(new Date())
-
-useEffect(() => {
-  setdata(new Date());
-}, [location]);
+  useEffect(() => {
+    setdate(new Date());
+  }, [props.location]);
 
 
   const handlChange = (event) => {
-    setLocation(event.target.value);
+    props.setLocation(event.target.value);
   };
 
-  const handleSearch = () => {
-    if (!location) {
+  const handleSearch = async () => {
+    if (!props.location) {
       return;
     }
-    fetchWeatherData(location);
-  };
-
-  const fetchWeatherData = (location) => {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=Metric&appid=${apiKey}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("failed to fetch api");
-        }
-        return response.json()
-      })
-      .then((responseData) => {
-        setdata(responseData);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    try {
+      const responseData = await fetchWeatherData(props.location);
+      props.setdata(responseData);
+    } catch {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -59,9 +46,8 @@ useEffect(() => {
             className='w-full px-3 bg-transparent p-2'
             type="search"
             placeholder='Search'
-            value={location}
+            value={props.location}
             onChange={handlChange}
-          // onChange={(e) => props.onLocationChange && props.onLocationChange(String(e.target.value))}
           />
           <FontAwesomeIcon icon={faMagnifyingGlass}
             className={`${props.textColor} text-2xl`}
@@ -79,7 +65,7 @@ useEffect(() => {
                 className='w-full p-2 px-5 bg-transparent'
                 type="search"
                 placeholder='Search'
-                value={location}
+                value={props.location}
                 onChange={handlChange}
               />
               <FontAwesomeIcon icon={faMagnifyingGlass}
@@ -122,7 +108,7 @@ useEffect(() => {
             <div className="flex justify-between">
               <span>Cloudy</span>
               <div className='p-2 flex gap-2 items-center'>
-                <span>{(data?.clouds?.all) ? data.clouds.all:0}%</span>
+                <span>{(data?.clouds?.all) ? data.clouds.all : 0}%</span>
                 <FontAwesomeIcon icon={faCloud} className='text-sky-400' />
               </div>
             </div>
@@ -145,7 +131,7 @@ useEffect(() => {
       <div className='absolute bottom-[67%] left-7  text-center lg:bottom-10 lg:left-[15%] '>
 
         <div className="flex gap-2 items-center">
-          <span className='text-6xl'>{(data?.main?.temp)? Math.round(data.main.temp):0}&deg;</span>
+          <span className='text-6xl'>{(data?.main?.temp) ? Math.round(data.main.temp) : 0}&deg;</span>
           <div className="">
             <div className="text-3xl pt-0 ">{data.name}</div>
             <div className='text-sm'>{date.toDateString()}</div>
@@ -154,7 +140,7 @@ useEffect(() => {
             image
           </span>
         </div>
- 
+
       </div>
 
       {/* whether details for smaller screen hidden for larger screen */}
@@ -195,7 +181,7 @@ useEffect(() => {
           <div className="flex justify-between">
             <span>Cloudy</span>
             <div className='p-2 flex gap-2 items-center'>
-              <span>{(data?.clouds?.all) ? data.clouds.all:0}%</span>
+              <span>{(data?.clouds?.all) ? data.clouds.all : 0}%</span>
               <FontAwesomeIcon icon={faCloud} className='text-sky-400' />
             </div>
           </div>
