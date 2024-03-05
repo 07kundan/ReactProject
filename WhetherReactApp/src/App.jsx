@@ -79,7 +79,7 @@ function App() {
         data={data}
         setdata={setdata}
         backgroundImage={image}
-        textColor='text-white'
+        textColor='text-red-700'
         videoSource={ImageCollection.LargeScreen.rainVideo}
       />
     </div>
