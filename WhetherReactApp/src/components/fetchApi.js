@@ -9,3 +9,11 @@ export async function fetchWeatherData(location) {
   }
   return response.json();
 }
+
+export async function fetchWeatherDataByCords(latitude, longitude) {
+  const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return response.json();
+}

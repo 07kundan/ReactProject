@@ -3,6 +3,7 @@ import Humidity from '../assets/BigMonitorImage/humidity.jpg';
 import Rain from '../assets/BigMonitorImage/rain.jpg';
 import Sunny from '../assets/BigMonitorImage/sunny.jpg';
 import Thunder from '../assets/BigMonitorImage/thunder.jpg';
+import rainVideo from '/src/assets/BigMonitorImage/rain.mp4';
 
 import Mcity from '../assets/MobileImage/city.jpg';
 import Mhumidity from '../assets/MobileImage/humidity.jpg';
@@ -27,6 +28,7 @@ const ImageCollection={
       rain:`url(${Rain})`,
       sunny:`url(${Sunny})`,
       thunder:`url(${Thunder})`,
+      rainVideo: rainVideo,
     },
 
   }

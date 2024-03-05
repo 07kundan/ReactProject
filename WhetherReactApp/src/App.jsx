@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
 import ImageCollection from './components/ImageCollection';
+import { fetchWeatherDataByCords } from './components/fetchApi';
 
 function App() {
 
@@ -10,7 +11,25 @@ function App() {
   const [location, setLocation] = useState("");
   const [data, setdata] = useState({});
 
-
+  // get user location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        // console.log('Latitude:', latitude);
+        // console.log('Longitude:', longitude);
+        const responseData = await fetchWeatherDataByCords(latitude, longitude)
+        setdata(responseData)
+      },
+        (error) => {
+          console.error("error getting location", error.message)
+        }
+      )
+    }
+    else {
+      console.error("browser doesn't support geolocation")
+    }
+  }, [])
 
   // It'll return the screenSize
   useEffect(() => {
@@ -60,8 +79,8 @@ function App() {
         data={data}
         setdata={setdata}
         backgroundImage={image}
-        textColor='text-black'
-
+        textColor='text-white'
+        videoSource={ImageCollection.LargeScreen.rainVideo}
       />
     </div>
   )
