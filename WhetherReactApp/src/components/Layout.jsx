@@ -9,7 +9,9 @@ function Layout(props) {
 
   const data = props.data;
   const [date, setdate] = useState(new Date())
-
+  const [isFocused, setIsFocused] = useState(false)
+  const [insideList, setInsideList] = useState(false)
+  const [searchHistory, setSearchHistory] = useState([])
 
   useEffect(() => {
     setdate(new Date());
@@ -20,6 +22,8 @@ function Layout(props) {
   };
 
   const handleSearch = async () => {
+    // console.log("handleSearch trigger")
+
     if (!props.location) {
       return;
     }
@@ -30,6 +34,15 @@ function Layout(props) {
     } catch (error) {
       props.setdata(false)
     }
+
+    // console.log("1"+props.location)
+    if (props.location !== "") {
+      setSearchHistory((prevSearchHistory) => [props.location, ...prevSearchHistory])
+      // console.log(searchHistory)
+    }
+
+    props.setLocation('')
+
   };
 
   const Buttonclicked = (event) => {
@@ -54,22 +67,32 @@ function Layout(props) {
 
       {/*  logo  */}
 
-      <span className='absolute top-10 left-20 text-8xl p-4'>
-            <span className="absolute bottom-3 inset-x-2 w-full h-1 bg-black rounded-full "></span>
+      <span className='absolute top-20 right-4 text-4xl p-4 text-blue-500 lg:top-3 lg:left-14'>
+        <span className="absolute bottom-2 inset-x-1 w-[93%] h-1 bg-blue-800 rounded-full lg:w-[18%]"></span>
         <div className="flex items-center gap-3">
           <FontAwesomeIcon icon={faShower} />
-          <div className='text-6xl relative'>
-            <div>shower</div>
-            <p className='text-sm'>get real time weather details</p>
+          <div className="relative -inset-x-16">
+            <div className='text-2xl opacity-0'
+              style={
+                {
+                  opacity: 1,
+                  transform: 'translateX(37%)',
+                  transition: 'all .5s ease-in-out .5s',
+                }
+              }>
+              <div>shower</div>
+              <p className='text-xs text-blue-800'>get real time weather details</p>
+            </div>
           </div>
         </div>
       </span>
+      {/* ------------------------ */}
 
-      {/* header for smaller screen and whether details for big screen  */}
+      {/* header for smaller screen and right-main div for big screen  */}
       <div className='w-full h-20 absolute lg:w-[35%] lg:h-full lg:backdrop-blur-md lg:right-0'>
 
         {/* search line for smaller screen larger screen-:hidden */}
-        <div className='w-[80%] h-14 m-auto rounded-2xl px-4 text-xl flex justify-between items-center backdrop-blur-xl mt-4 relative lg:hidden'>
+        <div className='w-[80%] h-14 m-auto rounded-2xl px-4 text-xl flex justify-between items-center backdrop-blur-xl mt-4 relative z-10 lg:hidden'>
           <span className='block absolute bottom-1.5 left-5 w-[88%] h-0.5 rounded-full bg-white bg-opacity-25'></span>
 
           <input
@@ -80,19 +103,52 @@ function Layout(props) {
             value={props.location}
             onChange={handlChange}
             onKeyDown={Buttonclicked}
+            onFocus={() => { setIsFocused(true) }}
+            onBlur={() => {
+              if (!insideList) {
+                setIsFocused(false)
+              }
+            }}
           />
           <FontAwesomeIcon icon={faMagnifyingGlass}
             className={`${props.textColor} text-2xl active:text-xl `}
             onClick={() => { handleSearch() }}
           />
-        </div>
 
+          {isFocused && (
+            <div className='absolute top-14 left-0 w-full flex justify-center'>
+              <div className='w-[90%] bg-white border border-gray-300 rounded-xl shadow-md'>
+                <ul>
+                  {searchHistory.map((item, index) => (
+                    <li
+                      className='cursor-pointer text-black text-lg px-4 py-2 hover:bg-gray-300 '
+                      key={index}
+                      value={item}
+                      onTouchStart={() => {
+                        setInsideList(true)
+                      }}
+                      onClick={() => {
+                        props.setLocation(item)
+                        setInsideList(false)
+                        setIsFocused(false)
+                      }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+        </div>
+        {/* ---------------- */}
 
         {/* whether details for larger screen hidden for smaller screen*/}
         <div className='hidden lg:block w-full h-full'>
           <div className={`w-full h-full px-10 py-12 text-lg ${props.textColor} flex flex-col gap-6`}>
 
-            <div className='w-[95%] h-12 rounded-3xl px-4 text-xl flex mx-auto items-center relative bg-white bg-opacity-25 '>
+            <div className='w-[95%] h-12 rounded-3xl px-4 text-xl flex mx-auto items-center relative bg-white bg-opacity-25'>
 
               {/* underline effect */}
               <span className='absolute bottom-1 left-5 w-[88%] h-0.5 rounded-full bg-white bg-opacity-55'></span>
@@ -105,16 +161,47 @@ function Layout(props) {
                 value={props.location}
                 onChange={handlChange}
                 onKeyDown={Buttonclicked}
+                onFocus={() => { setIsFocused(true) }}
+                onBlur={() => {
+                  if (!insideList) {
+                    setIsFocused(false)
+                  }
+                }}
               />
               <button
                 id="button"
                 className={`${props.textColor} px-4 text-2xl active:text-xl `}
                 onClick={handleSearch}
               >
-
                 <FontAwesomeIcon icon={faMagnifyingGlass}
                 />
               </button>
+
+              {isFocused && (
+                <div className='absolute top-14 left-0 w-full flex justify-center '>
+                  <div className='w-[90%] bg-white border border-gray-300 rounded-xl shadow-md'>
+                    <ul>
+                      {searchHistory.map((item, index) => (
+                        <li
+                          className={`cursor-pointer text-black text-lg px-4 py-2 hover:bg-gray-300`}
+                          key={index}
+                          value={item}
+                          onMouseOver={() => { setInsideList(true) }}
+                          onMouseLeave={() => { setInsideList(false) }}
+                          onClick={() => {
+                            // setIsFocused(true)
+                            props.setLocation(item)
+                            setIsFocused(false)
+                            // handleSearch()  // state of location updating late
+                          }}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
 
             </div>
 
@@ -166,38 +253,25 @@ function Layout(props) {
             </div>
           </div>
         </div>
+        {/* ---------------- */}
+
       </div>
+      {/* ----------------------- */}
 
       {/* social-media link hidden for smaller device*/}
 
       <div className='hidden lg:block w-[65%] h-full relative'>
         <div className="absolute bottom-3 flex w-full justify-center items-center gap-4 text-blue-500">
-          <span className='text-lg text-black'>&copy; 2024 KUNDAN</span>
-          <div className='flex gap-4 justify-center text-4xl '>
-            <a className='hover:text-blue-800' href="https://github.com/07kundan"><FontAwesomeIcon icon={faGithub} /></a>
-            <a className='hover:text-blue-800' href="https://linkedin.com/in/kundan-kumar-ratu"><FontAwesomeIcon icon={faLinkedin} className='' /></a>
-            <a className='hover:text-blue-800' href="https://instagram.com/kun_dan.kr"><FontAwesomeIcon icon={faInstagram} className='' /></a>
+          <span className='text-sm text-black'>&copy; 2024 KUNDAN</span>
+          <div className='flex gap-4 justify-center text-2xl '>
+            <a className='hover:text-blue-800' href="https://github.com/07kundan" target='_blank'><FontAwesomeIcon icon={faGithub} /></a>
+            <a className='hover:text-blue-800' href="https://linkedin.com/in/kundan-kumar-ratu" target='_blank'><FontAwesomeIcon icon={faLinkedin} className='' /></a>
+            <a className='hover:text-blue-800' href="https://instagram.com/kun_dan.kr" target='_blank'><FontAwesomeIcon icon={faInstagram} className='' /></a>
           </div>
         </div>
 
       </div>
-
-
-      {/* whether description heading */}
-      <div className='absolute bottom-[67%] left-7 text-center lg:bottom-1/3 lg:left-[10%] '>
-
-        <div className="flex gap-2 items-center">
-          <span className='text-6xl'>{(data?.main?.temp) ? Math.round(data.main.temp) : 0}&deg;</span>
-          <div className="">
-            <div className="text-3xl pt-0 ">{(!data) ? "Not found" : data.name}</div>
-            <div className='text-lg'>{date.toDateString()}</div>
-          </div>
-          <span>
-            image
-          </span>
-        </div>
-
-      </div>
+      {/* ------------------------- */}
 
       {/* whether details for smaller screen hidden for larger screen */}
 
@@ -254,13 +328,15 @@ function Layout(props) {
 
           <div className='w-full h-full relative flex justify-center'>
 
-            <div className=" w-full text-center absolute bottom-5">
-              <div className='flex gap-4 justify-center text-4xl text-blue-600 '>
-                <a className='hover:text-blue-800-900' href="https://github.com/07kundan"><FontAwesomeIcon icon={faGithub} /></a>
-                <a className='hover:text-blue-800' href="https://linkedin.com/in/kundan-kumar-ratu"><FontAwesomeIcon icon={faLinkedin} className='' /></a>
-                <a className='hover:text-blue-800' href="https://instagram.com/kun_dan.kr"><FontAwesomeIcon icon={faInstagram} className='' /></a>
+            {/* social media link */}
+
+            <div className=" w-full absolute bottom-2">
+              <div className='flex gap-4 justify-center items-center text-4xl text-blue-600 '>
+                <div className='text-lg text-black'>&copy; 2024 KUNDAN</div>
+                <a href="https://github.com/07kundan" target='_blank'><FontAwesomeIcon icon={faGithub} /></a>
+                <a href="https://linkedin.com/in/kundan-kumar-ratu" target='_blank'><FontAwesomeIcon icon={faLinkedin} className='' /></a>
+                <a href="https://instagram.com/kun_dan.kr" target='_blank'><FontAwesomeIcon icon={faInstagram} className='' /></a>
               </div>
-              <div className='mt-4 text-lg text-black'>&copy; 2024 KUNDAN</div>
 
             </div>
           </div>
@@ -271,6 +347,23 @@ function Layout(props) {
       </div>
 
 
+      {/* whether description heading */}
+      <div className='absolute bottom-[67%] left-7 text-center lg:bottom-1/3 lg:left-[10%] '>
+
+        <div className="flex gap-2 items-center">
+          <span className='text-6xl'>{(data?.main?.temp) ? Math.round(data.main.temp) : 0}&deg;</span>
+          <div className="">
+            <div className="text-3xl pt-0 ">{(!data) ? "Not found" : data.name}</div>
+            <div className='text-lg'>{date.toDateString()}</div>
+          </div>
+          {data && data.weather && Array.isArray(data.weather) && (
+            <span><img src={`http://openweathermap.org/img/wn/${data.weather[0].icon}.png`} alt="icon" /></span>
+          )}
+
+        </div>
+
+      </div>
+      {/* --------------- */}
 
     </div>
   );
