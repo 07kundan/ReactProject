@@ -7,7 +7,8 @@ import { fetchWeatherDataByCords } from './components/fetchApi';
 function App() {
 
   const [screenSize, setScreenSize] = useState(window.innerWidth)
-  const [image, setImage] = useState()
+  const [background, setBackground] = useState('Clear')
+  const [text, setText] = useState('')
   const [location, setLocation] = useState("");
   const [data, setdata] = useState({});
 
@@ -30,6 +31,7 @@ function App() {
       console.error("browser doesn't support geolocation")
     }
   }, [])
+  // --------------
 
   // It'll return the screenSize
   useEffect(() => {
@@ -45,30 +47,38 @@ function App() {
     };
 
   }, []);
+  // --------------------
 
   // function for dynamic change background 
 
   const ChangeBG = () => {
-
+    let WeatherMain;
+    if (data && data.weather && Array.isArray(data.weather)) {
+      WeatherMain = data.weather[0].main;
+    }
+    return WeatherMain;
   }
 
   useEffect(() => {
+    const bg = ChangeBG();
+
+    if (bg == 'Rain' || bg=='Clouds') {
+      setText("text-amber-400")
+    }
+    else if(bg=='Clear'){
+      setText('text-white')
+    }
+    else{
+      setText('text-red-600')
+    }
     if (screenSize >= 768) {
-      if (data?.main?.temp < 20) {
-        setImage(ImageCollection.LargeScreen.rain)
-      }
-      else {
-        setImage(ImageCollection.LargeScreen.city);
-      }
-    } else {
-      if (data?.main?.temp < 20) {
-        setImage(ImageCollection.MobileScreen.rain)
-      }
-      else {
-        setImage(ImageCollection.MobileScreen.city);
-      }
+    setBackground(ImageCollection.LargeScreen[bg]);
+    }
+    else{
+      setBackground(ImageCollection.MobileScreen[bg]);
     }
   }, [screenSize, data]);
+
 
 
   return (
@@ -78,9 +88,10 @@ function App() {
         setLocation={setLocation}
         data={data}
         setdata={setdata}
-        backgroundImage={image}
-        textColor='text-red-700'
-        videoSource={ImageCollection.LargeScreen.rainVideo}
+        textColor={text}
+        // backgroundImage={image}
+        // videoSource={ImageCollection.LargeScreen.Clouds}
+        videoSource={background}
       />
     </div>
   )
