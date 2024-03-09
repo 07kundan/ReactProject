@@ -7,8 +7,8 @@ import { fetchWeatherDataByCords } from './components/fetchApi';
 function App() {
 
   const [screenSize, setScreenSize] = useState(window.innerWidth)
-  const [background, setBackground] = useState('Clear')
-  const [text, setText] = useState('')
+  const [background, setBackground] = useState('')
+  const [text, setText] = useState('bg-slate-700')
   const [location, setLocation] = useState("");
   const [data, setdata] = useState({});
 
@@ -60,12 +60,15 @@ function App() {
   }
 
   useEffect(() => {
+
     const bg = ChangeBG();
 
     if (bg == 'Rain' || bg=='Clouds') {
       setText("text-amber-400")
     }
-    else if(bg=='Clear'){
+    else if(bg=='Clear' || !bg){
+      if(screenSize<768) setText('text-slate-700')
+      else
       setText('text-white')
     }
     else{
@@ -89,8 +92,7 @@ function App() {
         data={data}
         setdata={setdata}
         textColor={text}
-        // backgroundImage={image}
-        // videoSource={ImageCollection.LargeScreen.Clouds}
+        screenSize={screenSize}
         videoSource={background}
       />
     </div>

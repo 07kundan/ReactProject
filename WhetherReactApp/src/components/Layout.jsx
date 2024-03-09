@@ -74,7 +74,7 @@ function Layout(props) {
     // style={{ backgroundImage: ImageCollection.LargeScreen.city }}
     >
       <video autoPlay loop muted id='bg-video' className='absolute top-0 left-0 w-full h-full object-cover z-0'>
-        <source src={props.videoSource} type='video/mp4' />
+        <source src={props.videoSource || (props.screenSize < 768 ) ? ImageCollection.MobileScreen.Clear : ImageCollection.LargeScreen.Clear} type='video/mp4' />
         Your browser does not support the video tag.
       </video>
 
@@ -280,12 +280,12 @@ function Layout(props) {
       {/* for larger screen social-media link hidden for smaller device*/}
 
       <div className='hidden lg:block w-[65%] h-full relative'>
-        <div className="absolute bottom-3 flex w-full justify-center items-center gap-5 text-green-600">
+        <div className="absolute bottom-3 flex w-full justify-center items-center gap-5 text-blue-600">
           <span className='text-base font-medium'>&copy; 2024 KUNDAN</span>
           <div className='flex gap-4 justify-center text-3xl '>
-            <a className='hover:text-green-900' href="https://github.com/07kundan" target='_blank'><FontAwesomeIcon icon={faGithub} /></a>
-            <a className='hover:text-green-900' href="https://linkedin.com/in/kundan-kumar-ratu" target='_blank'><FontAwesomeIcon icon={faLinkedin} className='' /></a>
-            <a className='hover:text-green-900' href="https://instagram.com/kun_dan.kr" target='_blank'><FontAwesomeIcon icon={faInstagram} className='' /></a>
+            <a className='hover:text-blue-900' href="https://github.com/07kundan" target='_blank'><FontAwesomeIcon icon={faGithub} /></a>
+            <a className='hover:text-blue-900' href="https://linkedin.com/in/kundan-kumar-ratu" target='_blank'><FontAwesomeIcon icon={faLinkedin} className='' /></a>
+            <a className='hover:text-blue-900' href="https://instagram.com/kun_dan.kr" target='_blank'><FontAwesomeIcon icon={faInstagram} className='' /></a>
           </div>
         </div>
 
@@ -299,9 +299,9 @@ function Layout(props) {
 
           <div className='text-center'>whether details</div>
 
-          {data && data.weather && Array.isArray(data.weather) ? (
+          {data && data.weather && Array.isArray(data.weather) && (
             <div className="text-center">{data.weather[0].description.toUpperCase()}</div>
-          ) : <div className="text-center">loading...</div>
+          ) 
 
           }
 
@@ -351,7 +351,7 @@ function Layout(props) {
             {/* social media link */}
 
             <div className=" w-full absolute bottom-4">
-              <div className='flex gap-4 justify-center items-center text-3xl text-green-600 '>
+              <div className='flex gap-4 justify-center items-center text-3xl text-blue-600 '>
                 <div className='text-base '>&copy; 2024 KUNDAN</div>
                 <a href="https://github.com/07kundan" target='_blank'><FontAwesomeIcon icon={faGithub} /></a>
                 <a href="https://linkedin.com/in/kundan-kumar-ratu" target='_blank'><FontAwesomeIcon icon={faLinkedin} className='' /></a>
