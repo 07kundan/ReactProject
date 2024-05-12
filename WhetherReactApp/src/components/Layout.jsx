@@ -102,7 +102,7 @@ function Layout(props) {
       {/* ------------------------ */}
 
       {/* header for smaller screen and right-main div for big screen  */}
-      <div className='w-full h-20 absolute lg:w-[38%] lg:h-full lg:backdrop-blur-md lg:right-0'>
+      <div className='w-full h-20 absolute lg:w-[38%] lg:h-full lg:backdrop-blur-sm lg:right-0'>
 
         {/* search line for smaller screen larger screen-:hidden */}
         <div className={`w-[80%] h-14 m-auto rounded-2xl px-4 text-xl ${props.textColor} flex justify-between items-center backdrop-blur-xl mt-4 relative z-10 lg:hidden`}>
@@ -161,7 +161,7 @@ function Layout(props) {
         {/* whether details for larger screen hidden for smaller screen*/}
         <div className='hidden lg:block w-full h-full'>
           <div className="flex w-full h-full shadow-lg shadow-black text-emerald-400">
-            <span className='h-full w-5 backdrop-blur-xl'></span>
+            {/* <span className='h-full w-5 backdrop-blur-xl'></span> */}
 
             <div className={`w-full h-full px-10 py-12 text-lg ${props.textColor} flex flex-col gap-6`}>
 
@@ -294,7 +294,7 @@ function Layout(props) {
 
       {/* whether details for smaller screen hidden for larger screen */}
 
-      <div className='w-full h-[65%] absolute bottom-0 backdrop-blur-md lg:hidden '>
+      <div className='w-full h-[65%] absolute bottom-0 backdrop-blur-sm lg:hidden '>
         <div className={`w-full h-full px-10 text-2xl ${props.textColor} flex flex-col gap-4 pt-4`}>
 
           <div className='text-center'>whether details</div>
